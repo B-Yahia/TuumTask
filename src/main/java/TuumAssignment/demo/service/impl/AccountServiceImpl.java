@@ -22,12 +22,9 @@ public class AccountServiceImpl implements AccountService {
     private BalanceMapper balanceMapper;
 
     @Override
-    public Account createAccount(Long customerId, String country, List<Balance> balances) {
-        val account = new Account();
-        account.setCustomerId(customerId);
-        account.setCountry(country);
+    public Account createAccount(Account account) {
         accountMapper.createAccount(account);
-        balanceMapper.createBalances(account.getAccountId(), balances);
+        balanceMapper.createBalances(account.getAccountId(), account.getBalances());
         return account;
     }
 

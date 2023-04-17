@@ -3,7 +3,10 @@ package TuumAssignment.demo.controller;
 import TuumAssignment.demo.model.Balance;
 import TuumAssignment.demo.service.BalanceService;
 import TuumAssignment.demo.service.impl.BalanceServiceImpl;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,8 @@ public class BalanceController {
     private BalanceServiceImpl balanceService;
 
     @GetMapping
-    public List<Balance> getBalancesByAccountId(@PathVariable("accountId") Long accountId) {
-        return balanceService.getBalancesByAccountId(accountId);
+    public ResponseEntity<List<Balance>> getBalancesByAccountId(@PathVariable("accountId") Long accountId) {
+        val balanceList =balanceService.getBalancesByAccountId(accountId);
+        return new ResponseEntity<>(balanceList, HttpStatus.OK);
     }
 }

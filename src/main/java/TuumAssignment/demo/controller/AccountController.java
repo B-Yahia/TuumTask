@@ -4,7 +4,11 @@ import TuumAssignment.demo.model.Account;
 import TuumAssignment.demo.model.Balance;
 import TuumAssignment.demo.service.AccountService;
 import TuumAssignment.demo.service.impl.AccountServiceImpl;
+import jakarta.validation.Valid;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +21,15 @@ public class AccountController {
     private AccountServiceImpl accountService;
 
     @PostMapping
-    public Account createAccount(@RequestParam("customerId") Long customerId,
-                                 @RequestParam("country") String country,
-                                 @RequestBody List<Balance> balances) {
-        return accountService.createAccount(customerId, country, balances);
+    public ResponseEntity<Account> createAccount(@Valid @RequestBody  Account account) {
+        val draftAccount = accountService.createAccount(account);
+
+        return new ResponseEntity<>(draftAccount, HttpStatus.CREATED);
     }
 
     @GetMapping("/{accountId}")
-    public Account getAccount(@PathVariable("accountId") Long accountId) {
-        return accountService.getAccount(accountId);
+    public ResponseEntity<Account> getAccount(@PathVariable("accountId") Long accountId) {
+        val draftAccount = accountService.getAccount(accountId);
+        return new ResponseEntity<>(draftAccount, HttpStatus.OK);
     }
 }

@@ -4,7 +4,10 @@ import TuumAssignment.demo.model.Transaction;
 import TuumAssignment.demo.service.TransactionService;
 import TuumAssignment.demo.service.impl.TransactionServiceImpl;
 import jakarta.validation.Valid;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,18 +20,21 @@ public class TransactionController {
     private TransactionServiceImpl transactionService;
 
     @PostMapping
-    public Transaction createTransaction(@Valid @RequestBody Transaction transaction) {
-        return transactionService.createTransaction(transaction);
+    public ResponseEntity<Transaction> createTransaction(@Valid @RequestBody Transaction transaction) {
+        val draftTransaction =transactionService.createTransaction(transaction);
+        return new ResponseEntity<>(draftTransaction, HttpStatus.CREATED);
     }
 
-    @GetMapping("/transaction/{transactionId}")
-    public Transaction getTransaction(@PathVariable("transactionId") Long transactionId) {
-        return transactionService.getTransaction(transactionId);
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<Transaction> getTransaction(@PathVariable("transactionId") Long transactionId) {
+        val draftTransaction = transactionService.getTransaction(transactionId);
+        return new ResponseEntity<>(draftTransaction, HttpStatus.CREATED);
     }
 
-    @GetMapping("/transactions/{accountId}")
-    public List<Transaction> getTransactionsByAccountId(@PathVariable("accountId") Long accountId) {
-        return transactionService.getTransactionsByAccountId(accountId);
+    @GetMapping("/byAccountId/{accountId}")
+    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable("accountId") Long accountId) {
+        val transactionList = transactionService.getTransactionsByAccountId(accountId);
+        return new ResponseEntity<>(transactionList, HttpStatus.CREATED);
     }
 
 }
