@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TuumAssignment.demo.mapper.AccountMapper">
+    <resultMap id="accountResultMap" type="TuumAssignment.demo.model.Account">
+        <id property="accountId" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="country" column="country"/>
+        <collection property="balances" ofType="TuumAssignment.demo.model.Balance" column="id" select="TuumAssignment.demo.mapper.BalanceMapper.getBalances"/>
+    </resultMap>
+
+    <insert id="createAccount" parameterType="TuumAssignment.demo.model.Account" keyProperty="accountId" useGeneratedKeys="true">
+        INSERT INTO accounts (customer_id, country)
+        VALUES (#{customerId}, #{country})
+    </insert>
+    <select id="getAccount" parameterType="long" resultMap="accountResultMap">
+        SELECT id, customer_id, country FROM accounts WHERE id = #{accountId}
+    </select>
+</mapper>

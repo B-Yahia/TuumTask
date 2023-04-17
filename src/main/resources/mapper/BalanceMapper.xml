@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TuumAssignment.demo.mapper.BalanceMapper">
+    <resultMap id="balanceResultMap" type="TuumAssignment.demo.model.Balance">
+        <id property="id" column="id"/>
+        <result property="availableAmount" column="available_amount"/>
+        <result property="currency" column="currency"/>
+    </resultMap>
+
+    <insert id="createBalances" parameterType="map">
+        INSERT INTO balances (account_id, available_amount, currency)
+        VALUES
+        <foreach collection="balances" item="balance" separator=",">
+            (#{accountId}, #{balance.availableAmount}, #{balance.currency})
+        </foreach>
+    </insert>
+
+    <insert id="createBalance" parameterType="map">
+        INSERT INTO balances (account_id, available_amount, currency)
+        VALUES (#{accountId}, #{balance.availableAmount}, #{balance.currency})
+    </insert>
+
+    <select id="getBalances" parameterType="long" resultMap="balanceResultMap">
+        SELECT * FROM balances WHERE account_id = #{accountId}
+    </select>
+
+    <update id="updateBalance" parameterType="TuumAssignment.demo.model.Balance">
+        UPDATE balances
+        SET available_amount = #{availableAmount}, currency = #{currency}
+        WHERE id = #{id}
+    </update>
+</mapper>
