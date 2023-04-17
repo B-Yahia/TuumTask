@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -25,14 +26,11 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction createTransaction(Transaction transaction) {
         val accountId = transaction.getAccountId();
         val account = accountService.getAccount(accountId);
-        boolean validCurrency = false;
-        validCurrency = isValidCurrency(transaction, account, validCurrency);
-        if (validCurrency==false){
-            throw new TransactionRelatedException("Invalid currency");
-        }
+
         if (transaction.getAmount().compareTo(BigDecimal.ZERO)<=0){
             throw new TransactionRelatedException("Invalid Amount");
         }
+
         val balance = getAccountBalanceWithRightCurrency(transaction.getCurrency(),account.getBalances());
         changeBalanceAmountAndSaveChange(transaction, balance);
         transaction.setBalanceAfter(balance.getAvailableAmount());
@@ -53,22 +51,9 @@ public class TransactionServiceImpl implements TransactionService {
         balanceService.updateBalance(balance);
     }
 
-    private Balance getAccountBalanceWithRightCurrency(Currency currency ,List<Balance> balanceList){
-        Balance draftBalance = new Balance();
-        for (Balance balance: balanceList) {
-            if (currency==balance.getCurrency()){
-                draftBalance = balance;
-            }
-        }
-        return draftBalance;
-    }
-    private boolean isValidCurrency(Transaction transaction, Account account, boolean validCurrency) {
-        for (Balance balance: account.getBalances()) {
-            if (transaction.getCurrency()==balance.getCurrency()){
-                validCurrency =true;
-            }
-        }
-        return validCurrency;
+    private Balance getAccountBalanceWithRightCurrency(Currency currency, List<Balance> balanceList) {
+        Optional<Balance> draftBalance = balanceList.stream().filter(b -> b.getCurrency() == currency).findFirst();
+        return draftBalance.orElseThrow(() -> new TransactionRelatedException("Invalid currency"));
     }
 
     @Override

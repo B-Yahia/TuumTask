@@ -14,12 +14,12 @@ CREATE TABLE balances (
 );
 
 CREATE TABLE transactions (
-    id BIGINT PRIMARY KEY,
-    account_id BIGINT NOT NULL,
-    amount NUMERIC(19,4) NOT NULL,
-    currency VARCHAR(3) NOT NULL,
-    direction VARCHAR(3) NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    balance_after NUMERIC(19,4) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  id SERIAL PRIMARY KEY,
+  account_id BIGINT NOT NULL,
+  amount DECIMAL(19, 4) NOT NULL,
+  currency VARCHAR(3) NOT NULL,
+  direction VARCHAR(4) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  balance_after DECIMAL(19, 4) NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES accounts(id)
 );

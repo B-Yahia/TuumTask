@@ -23,7 +23,6 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<Account> createAccount(@Valid @RequestBody  Account account) {
         val draftAccount = accountService.createAccount(account);
-
         return new ResponseEntity<>(draftAccount, HttpStatus.CREATED);
     }
 
