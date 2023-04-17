@@ -30,4 +30,5 @@ public class TransactionController {
     public List<Transaction> getTransactionsByAccountId(@PathVariable("accountId") Long accountId) {
         return transactionService.getTransactionsByAccountId(accountId);
     }
+
 }
